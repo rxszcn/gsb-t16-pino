@@ -12,10 +12,11 @@ const log = pino({}, pino.multistream([d1, d2]));
 for (let i = 0; i < 300; i++) log.info('line ' + i + ' ' + 'x'.repeat(60));
 
 let cb = 0;
-log.flush(() => { cb++; });
-
 const count = (f) => fs.readFileSync(path.join(dir, f), 'utf8').split('\n').filter(Boolean).length;
-console.log('flush 回调返回时：次数 =', cb, '| a.log 行数 =', count('a.log'), '| b.log 行数 =', count('b.log'), '（各写了 300 行）');
+log.flush(() => {
+  cb++;
+  console.log('flush 回调返回时：次数 =', cb, '| a.log 行数 =', count('a.log'), '| b.log 行数 =', count('b.log'), '（各写了 300 行）');
+});
 
 setTimeout(() => {
   console.log('等 300ms 后：a.log 行数 =', count('a.log'), '| 回调次数 =', cb);
